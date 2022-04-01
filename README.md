@@ -1,6 +1,6 @@
 # 3. Spiral Ascension (extra)
 
-This is an exercise number 5 from exam conducted after 1st month of Scala Academy at [Adform](https://github.com/adform).
+This is an extra exercise number 3 from exam conducted after 1st month of Scala Academy at [Adform](https://github.com/adform).
 
 Exercise rules & description: [link](https://www.reddit.com/r/dailyprogrammer/comments/6i60lr/20170619_challenge_320_easy_spiral_ascension/)
 
