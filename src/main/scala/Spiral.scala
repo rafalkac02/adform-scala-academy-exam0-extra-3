@@ -1,69 +1,63 @@
-object Spiral extends App {
+class Spiral(n: Int) {
 
-  val n = 5
   var spiral = Array.ofDim[Int](n, n)
-
-  // PATTERN:
-  // move n steps right, turn
-  // (2x move n-1 steps, turn) until n is 0
-
-
-
-  def move(arr: Array[Array[Int]], c: Int, position: (Int, Int), steps: Int, dir: Char) = {
-
-    var (i, j) = position
-    var spiral = arr
-
-    dir.toUpper match {
-      // Right
-      case 'R' => for (x <- 0 until steps) {
-        spiral(i + x)(j) = c + x
-      }
-        i += steps
-      // Down
-      case 'D' => for (x <- 0 until steps) {
-        spiral(i)(j + x) = c + x
-      }
-        j -= steps
-      // Left
-      case 'L' => for (x <- 0 until steps) {
-        spiral(i - x)(j) = c + x
-      }
-        i -= steps
-      // Up
-      case 'U' => for (x <- 0 until steps) {
-        spiral(i)(j - x) = c + x
-      }
-        j += steps
-
-    }
-    (spiral, (i, j))
-  }
-
+  
   def turn(dir: Char): Char = {
     val directions = Seq('R', 'D', 'L', 'U')
     val oldIndex = directions.indexOf(dir)
-    directions((oldIndex+1) % 4)
+    directions((oldIndex + 1) % 4)
   }
 
-  var direction = 'R'
-  var position = (0,0)
-  var counter = 1
+  def changePosition(pos: (Int, Int), dir: Char) = {
+    var newDir = dir
+    val (y, x) = pos
+    var newPos = pos
 
-  spiral = move(spiral, counter, (0, 0), n, 'R')._1
-  position = (n-1, 0)
-  counter += n
+    // new direction - change direction if it is on the spiral's border
+    dir match {
+      case 'R' => if (x + 1 == n) newDir = turn(dir)
+      else if (spiral(x + 1)(y) != 0) newDir = turn(dir)
 
+      case 'D' => if (y + 1 == n) newDir = turn(dir)
+      else if (spiral(y + 1)(x) != 0) newDir = turn(dir)
 
-  for (x <- n-1 to 0 by -1) {
-    for (y <- 0 until 2) {
-      direction = turn(direction)
+      case 'L' => if (x-1 < 0) newDir = turn(dir)
+      else if (spiral(y)(x-1) != 0) newDir = turn(dir)
 
-      spiral = move(spiral, counter, position, x, direction)._1
-      position = move(spiral, counter, position, x, direction)._2
-
-      counter += n-1
+      case 'U' => if (spiral(y-1)(x) != 0) newDir = turn(dir)
     }
+
+    // new position
+    newDir match {
+      case 'R' => newPos = (y, x+1)
+      case 'D' => newPos = (y+1, x)
+      case 'L' => newPos = (y, x-1)
+      case 'U' => newPos = (y-1, x)
+    }
+
+    (newPos, newDir)
   }
 
+
+  def move(pos: (Int, Int), dir: Char, counter: Int) = {
+    spiral(pos._1)(pos._2) = counter
+  }
+
+
+  def makeSpiral = {
+    var position = (0, 0)
+    var direction = 'R'
+    var counter = 1
+
+    for (x <- 0 until n * n) {
+      move(position, direction, counter)
+
+      val (myPos, myDir) = changePosition(position, direction)
+      position = myPos
+      direction = myDir
+      counter += 1
+    }
+
+    spiral
+  }
 }
