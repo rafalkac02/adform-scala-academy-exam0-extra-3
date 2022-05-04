@@ -1,7 +1,7 @@
 class Spiral(n: Int) {
 
   var spiral = Array.ofDim[Int](n, n)
-  
+
   def turn(dir: Char): Char = {
     val directions = Seq('R', 'D', 'L', 'U')
     val oldIndex = directions.indexOf(dir)
